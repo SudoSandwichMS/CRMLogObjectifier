@@ -1,0 +1,7 @@
+/CRMLogObjectifier/bin/Debug
+/.vs/CRMLogObjectifier/v14
+*.suo
+*.user
+/TestParser/obj
+/CRMLogObjectifier/obj
+TestParser/bin/Debug
