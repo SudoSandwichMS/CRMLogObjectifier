@@ -21,11 +21,16 @@ namespace CRMLogObjectifier.LogParser
             _logLevel = LogLevelEnum.None;
         }
 
+        /// <returns> Log level Enum value </returns>
         public LogLevelEnum value()
         {
             return _logLevel;
         }
 
+        /// <summary>
+        /// Convert Enum to equivalent string
+        /// </summary>
+        /// <returns> String equivilant of Enum value </returns>
         public override string ToString()
         {
             switch (_logLevel)
@@ -47,11 +52,20 @@ namespace CRMLogObjectifier.LogParser
             }
         }
 
+        /// <summary>
+        /// Directly set Enum value for log level
+        /// </summary>
+        /// <param name="level"> Logging level Enum </param>
         public void set(LogLevelEnum level)
         {
             _logLevel = level;
         }
 
+        /// <summary>
+        /// Set log level using string value
+        /// </summary>
+        /// <param name="level"> Logging level as a string </param>
+        /// <remarks> Accepts: Verbose, Info, Warning and Error </remarks>
         public void set(string level)
         {
             switch (level)

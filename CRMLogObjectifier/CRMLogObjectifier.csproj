@@ -44,6 +44,7 @@
     <Compile Include="LogObjects\LogLevel.cs" />
     <Compile Include="LogParser\ILogParser.cs" />
     <Compile Include="LogParser\LogParser.cs" />
+    <Compile Include="LogParser\LogParserBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

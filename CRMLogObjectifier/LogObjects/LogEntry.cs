@@ -44,6 +44,10 @@ namespace CRMLogObjectifier.LogParser
         public StringBuilder traceMessage { get; set; }
         #endregion
 
+        /// <summary>
+        /// Pretty print log entry
+        /// </summary>
+        /// <returns> Formatted log entry for printing </returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

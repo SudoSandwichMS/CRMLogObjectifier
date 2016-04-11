@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CRMLogObjectifier.LogParser
 {
-    interface ILogParser    
+    public interface ILogParser    
     {
 
         List<LogEntry> LogList
