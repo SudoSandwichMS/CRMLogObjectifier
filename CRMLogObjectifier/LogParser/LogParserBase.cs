@@ -72,9 +72,9 @@ namespace CRMLogObjectifier.LogParser
         /// </summary>
         /// <param name="line"> Line of text to be parsed </param>
         /// <returns> Parsed log level as LogLevel object <see cref="LogLevel.ToString"/> and <see cref="LogLevel.value"/> </returns>
-        public LogLevel parseLogLevel(string line)
+        public LogLevelEnum parseLogLevel(string line)
         {
-            LogLevel result = new LogLevel();
+            LogLevelEnum result = LogLevelEnum.None;
 
             // String begining with Level: up to next space or '|'
             Regex regex = new Regex(@"Level:\s*[^ |]+");
@@ -83,7 +83,15 @@ namespace CRMLogObjectifier.LogParser
             if (match.Success)
             {
                 string level = match.Value.Split(':')[1].Trim();
-                result.set(level);
+
+                try
+                {
+                    result = (LogLevelEnum)Enum.Parse(typeof(LogLevelEnum), level);
+                }
+                catch (ArgumentException)
+                {
+                    // parsed string is not a member of LogLevelEnum
+                }
             }
 
             return result;

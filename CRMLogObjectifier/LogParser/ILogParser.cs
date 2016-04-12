@@ -21,7 +21,7 @@ namespace CRMLogObjectifier.LogParser
         int parseThread(string line);
         string parseCategory(string line);
         Guid? parseUserID(string line);
-        LogLevel parseLogLevel(string line);
+        LogLevelEnum parseLogLevel(string line);
         Guid? parseReqID(string line);
         string parseOperation(string line);
         StringBuilder parseStackTrace(string line);

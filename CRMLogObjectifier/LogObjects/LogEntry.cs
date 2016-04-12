@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CRMLogObjectifier.LogParser
 {
-
+    public enum LogLevelEnum { Verbose, Info, Warning, Error, None };
     public class LogEntry
     {
 
@@ -33,7 +33,7 @@ namespace CRMLogObjectifier.LogParser
 
         public string userName { get; set; }
   
-        public LogLevel logLevel { get; set;}
+        public LogLevelEnum logLevel { get; set;}
 
         public Guid? ReqId { get; set; }
 
