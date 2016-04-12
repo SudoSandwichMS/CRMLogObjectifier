@@ -15,8 +15,28 @@ namespace CRMLogObjectifier.LogParser
         private static Regex digitsOnly = new Regex(@"[^\d]");
         #endregion
 
-        #region Micro-Parsers
+        #region Compiled Regular Expressions
+        /// <summary> String begining with Category: and any characters following until ' ' or | </summary>
+        static Regex _categoryRegex = new Regex(@"Category:\s*[^ |]+", RegexOptions.Compiled);
+        /// <summary> String begining with Level: and any characters following until ' ' or | </summary> 
+        static Regex _levelRegex = new Regex(@"Level:\s*[^ |]+", RegexOptions.Compiled);
+        /// <summary> Last occurence of '|' including any characters following up to the next ' ' </summary>
+        static Regex _operationRegex = new Regex(@"\|(?!.*\|)\s+[^ ]*", RegexOptions.Compiled);
+        /// <summary> Match on the word Process: and any characters following until ' ' or | </summary>
+        static Regex _processRegex = new Regex(@"Process:\s*[^ |]+", RegexOptions.Compiled);
+        /// <summary> Strings that do not begin with '>' </summary>
+        static Regex _stackTraceRegex = new Regex(@"^(?!>).*$", RegexOptions.Compiled);
+        /// <summary>
+        ///  Match Thread: plus any space before digits 
+        ///  Sometimes thread is seen as 7(text.here)
+        ///  Using . to match any character not expected after thread number
+        /// </summary>
+        static Regex _threadRegex = new Regex(@"Thread:\s+\d+( |\||.)", RegexOptions.Compiled);
+        /// <summary> regex match timestamp format in file [yyyy-MM-dd HH:mm:ss.fff] </summary> 
+        static Regex _timestampRegex = new Regex(@"^\[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}.\d+\]", RegexOptions.Compiled);
+        #endregion
 
+        #region Micro-Parsers
         /// <summary>
         /// Parse Category from log entry header line
         /// </summary>
@@ -26,9 +46,7 @@ namespace CRMLogObjectifier.LogParser
         {
             string result = string.Empty;
 
-            // String begining with Category: up to next space or '|'
-            Regex regex = new Regex(@"Category:\s*[^ |]+");
-            Match match = regex.Match(line);
+            Match match = _categoryRegex.Match(line);
 
             if (match.Success)
             {
@@ -56,6 +74,7 @@ namespace CRMLogObjectifier.LogParser
              * (CA761232-ED42-11CE-BACD-00AA0057B223) 
              */
             Regex regex = new Regex(key + @"(\s+|)[{(]?[0-9A-Fa-f]{8}[-]?([0-9A-Fa-f]{4}[-]?){3}[0-9A-Fa-f]{12}[)}]?");
+
             Match match = regex.Match(line);
 
             if (match.Success)
@@ -76,9 +95,7 @@ namespace CRMLogObjectifier.LogParser
         {
             LogLevelEnum result = LogLevelEnum.None;
 
-            // String begining with Level: up to next space or '|'
-            Regex regex = new Regex(@"Level:\s*[^ |]+");
-            Match match = regex.Match(line);
+            Match match = _levelRegex.Match(line);
 
             if (match.Success)
             {
@@ -101,9 +118,7 @@ namespace CRMLogObjectifier.LogParser
         {
             string result = string.Empty;
 
-            // Last occurence of '|' including any characters following up to the next white space
-            Regex regex = new Regex(@"\|(?!.*\|)\s+[^ ]*");
-            Match match = regex.Match(line);
+            Match match = _operationRegex.Match(line);
 
             if (match.Success)
             {
@@ -125,14 +140,7 @@ namespace CRMLogObjectifier.LogParser
         {
             string result = string.Empty;
 
-            /*
-             * Match on the word Process: and any characters following until ' ' or | 
-             * **There is no garuntee that there will be a space after Process:
-             * 
-             * Usine negation [^ |]+ instead of .+? to avoid backtracking slowing down match
-             */
-            Regex regex = new Regex(@"Process:\s*[^ |]+");
-            Match match = regex.Match(line);
+            Match match = _processRegex.Match(line);
 
             if (match.Success)
             {
@@ -159,9 +167,7 @@ namespace CRMLogObjectifier.LogParser
         {
             StringBuilder result = new StringBuilder();
 
-            // Strings that do not begin with '>'
-            Regex regex = new Regex(@"^(?!>).*$");
-            Match match = regex.Match(line);
+            Match match = _stackTraceRegex.Match(line);
 
             if (match.Success)
             {
@@ -175,13 +181,7 @@ namespace CRMLogObjectifier.LogParser
         {
             int result = -1;
 
-            /*
-             * Match Thread: plus any white space before digits 
-             * Sometimes thread is seen as 7(text.here)
-             * Using . to match any character not expected after thread number
-             */
-            Regex regex = new Regex(@"Thread:\s+\d+( |\||.)");
-            Match match = regex.Match(line);
+            Match match = _threadRegex.Match(line);
             if (match.Success)
             {
                 // Sanitize thread number string and convert to int.
@@ -202,9 +202,7 @@ namespace CRMLogObjectifier.LogParser
         {
             DateTime timeStamp;
 
-            // regex match timestamp format in file [yyyy-MM-dd HH:mm:ss.fff] 
-            Regex regex = new Regex(@"^\[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}.\d{3}\]");
-            Match match = regex.Match(line);
+            Match match = _timestampRegex.Match(line);
 
             if (match.Success)
             {
@@ -224,7 +222,7 @@ namespace CRMLogObjectifier.LogParser
         /// <returns> trace message string </returns>
         public StringBuilder parseTraceMessage(string line)
         {
-            return new StringBuilder(line);
+            return new StringBuilder(line + "\n");
         }
 
 
@@ -233,6 +231,6 @@ namespace CRMLogObjectifier.LogParser
         {
             return parseGuid(line, "User:");
         }
-#endregion
+        #endregion
     }
 }

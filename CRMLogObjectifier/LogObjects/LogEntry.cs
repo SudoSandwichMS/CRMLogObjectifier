@@ -64,7 +64,6 @@ namespace CRMLogObjectifier.LogParser
             sb.Append("Operation:\t" + operation + "\n");
             sb.Append(stackTrace);
             sb.Append(traceMessage);
-            sb.Append(" END OF ENTRY \n\n");
 
             return sb.ToString();
         }

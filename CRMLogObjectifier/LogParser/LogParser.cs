@@ -75,15 +75,14 @@ namespace CRMLogObjectifier.LogParser
                      * Checking for space in start of string implies stack trace
                      * Checking for > at the start of the string fails in certain cases.
                      */
-                    Regex regex = new Regex(@"^\s+");
+                    Regex regex = new Regex(@"^\t+at");
                     Match match = regex.Match(_logLines[i]);
                     Boolean isEndStack = false;
                     while (!isEndStack)
                     {
-                        entry.stackTrace.Append(parseStackTrace(_logLines[i]));
-
                         if (match.Success)
                         {
+                            entry.stackTrace.Append(parseStackTrace(_logLines[i]));
                             i++;
                             match = regex.Match(_logLines[i]);
                         }
@@ -94,6 +93,7 @@ namespace CRMLogObjectifier.LogParser
                     }
 
                     entry.traceMessage.Append(parseTraceMessage(_logLines[i]));
+
 
 
                 }
